@@ -1,0 +1,81 @@
+{
+  "seed": 42,
+  "sample_frac_lineal": 0.05,
+  "entrenamiento": [
+    "2026-01",
+    "2026-02"
+  ],
+  "validacion": "2026-03",
+  "test_reservado": "2026-04",
+  "abril_evaluado": false,
+  "unidad_error": "puntos porcentuales de la tarifa base",
+  "constantes": {
+    "Media": 25.356692984103717,
+    "Mediana": 26.375838926174495
+  },
+  "metricas": [
+    {
+      "modelo": "Media",
+      "n_entrenamiento": 4225076,
+      "n_evaluacion": 2565402,
+      "MAE_pp": 9.747939062886777,
+      "RMSE_pp": 107.60959902591743,
+      "R2": -5.577449486926511e-06
+    },
+    {
+      "modelo": "Mediana",
+      "n_entrenamiento": 4225076,
+      "n_evaluacion": 2565402,
+      "MAE_pp": 9.684785365706047,
+      "RMSE_pp": 107.61683170409559,
+      "R2": -0.00014000712206230226
+    },
+    {
+      "modelo": "Lineal_log1p",
+      "n_entrenamiento": 211254,
+      "n_evaluacion": 2565402,
+      "MAE_pp": 7.5236730636052584,
+      "RMSE_pp": 107.28345908155694,
+      "R2": 0.006046810738952191
+    }
+  ],
+  "sensibilidad_no_principal": [
+    {
+      "modelo": "Media",
+      "segmento": "tarifa_mayor_igual_1_USD",
+      "n_evaluacion": 2565390,
+      "MAE_pp": 9.639859660246817,
+      "RMSE_pp": 25.32684980319218,
+      "R2": -0.00020454312537987462
+    },
+    {
+      "modelo": "Mediana",
+      "segmento": "tarifa_mayor_igual_1_USD",
+      "n_evaluacion": 2565390,
+      "MAE_pp": 9.576707256724905,
+      "RMSE_pp": 25.361904818474617,
+      "R2": -0.0029752351528329335
+    },
+    {
+      "modelo": "Lineal_log1p",
+      "segmento": "tarifa_mayor_igual_1_USD",
+      "n_evaluacion": 2565390,
+      "MAE_pp": 7.415622593185335,
+      "RMSE_pp": 24.012249184109788,
+      "R2": 0.10093279519445642
+    }
+  ],
+  "lineal_fraccion_predicciones_negativas_antes_recorte": 0.028144906724170325,
+  "features": [
+    "fare_amount",
+    "trip_distance",
+    "duration_min",
+    "passenger_count",
+    "VendorID",
+    "RatecodeID",
+    "PULocationID",
+    "DOLocationID",
+    "pickup_hour",
+    "pickup_weekday"
+  ]
+}
