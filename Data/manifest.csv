@@ -1,0 +1,5 @@
+mes,archivo,filas,columnas,bytes,sha256,uso
+2026-01,yellow_tripdata_2026-01.parquet,3724889,20,64165080,8b3933fe6f0d7b6d8826613c0dd724edc680ff7c49e2bd4c7635c05102728637,entrenamiento
+2026-02,yellow_tripdata_2026-02.parquet,3399866,20,58683353,5352ca800f29c40a221ed5b0c6392c451fde7fcd236a73651bd5aea74713a26c,entrenamiento
+2026-03,yellow_tripdata_2026-03.parquet,3952451,20,67891249,d7af794a7ac06cbbb5afb4d1df9e86d84f2e878584de708ff2ffca4bd7d234d9,validacion
+2026-04,yellow_tripdata_2026-04.parquet,3831240,20,64818115,e03b82d5722a6b21d4fbce011afd8837495202c0b5db77ff0d8d15dd80834ba8,reserva_final
