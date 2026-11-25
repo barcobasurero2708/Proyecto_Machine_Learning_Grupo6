@@ -1,1 +1,1 @@
-"""Funciones reproducibles para la entrega 1 del Grupo 6."""
+"""Código reproducible del proyecto final de Machine Learning (Grupo 6)."""

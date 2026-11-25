@@ -1,35 +1,35 @@
-"""Ejecuta las celdas en orden con IPython y guarda sus salidas, sin servidor.
+"""Ejecuta los notebooks en orden con IPython y guarda sus salidas, sin servidor.
 
-Uso: python ejecutar_notebook.py --data-dir Data
-También puede abrirse el notebook normalmente en VS Code o Jupyter.
+Uso:
+    python ejecutar_notebook.py --data-dir Data                # los cuatro notebooks
+    python ejecutar_notebook.py --data-dir Data --notebooks 03_modelos.ipynb
+
+Los notebooks 02-04 leen los resultados que deja `python main.py`; ejecútalo antes.
+También pueden abrirse normalmente en VS Code o Jupyter.
 """
 import argparse
 import os
-from pathlib import Path
 import time
+from pathlib import Path
+
 import nbformat
 from IPython.core.interactiveshell import InteractiveShell
 from IPython.utils.capture import capture_output
 
+NOTEBOOKS = ["01_exploracion_inicial.ipynb", "02_limpieza_features.ipynb",
+             "03_modelos.ipynb", "04_analisis_errores.ipynb"]
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data-dir", type=Path, default=Path("data/raw"))
-    args = parser.parse_args()
-    data_dir = args.data_dir.resolve()
-    root = Path(__file__).resolve().parent
-    path = root / "notebooks" / "01_exploracion_inicial.ipynb"
-    os.environ["TAXI_DATA_DIR"] = str(data_dir)
-    os.chdir(root)
+
+def run(path: Path) -> int:
     nb = nbformat.read(path, as_version=4)
+    InteractiveShell.clear_instance()
     shell = InteractiveShell.instance()
     count = 0
-    start = time.perf_counter()
     for cell in nb.cells:
         if cell.cell_type != "code":
             continue
         count += 1
-        print(f"Celda {count}: {cell.source.splitlines()[0][:90]}", flush=True)
+        print(f"  [{path.name}] celda {count}: {cell.source.splitlines()[0][:80]}", flush=True)
         with capture_output() as captured:
             execution = shell.run_cell(cell.source, store_history=True)
         outputs = []
@@ -44,10 +44,24 @@ def main():
             nbformat.write(nb, path)
             raise RuntimeError(captured.stdout + captured.stderr)
     nb.metadata["verificacion"] = {"metodo": "IPython secuencial en un proceso, sin servidor",
-                                     "celdas_ejecutadas": count, "abril_evaluado": False}
+                                     "celdas_ejecutadas": count}
     nbformat.validate(nb)
     nbformat.write(nb, path)
-    print(f"Notebook ejecutado: {count} celdas, {time.perf_counter() - start:.1f} s.")
+    return count
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data-dir", type=Path, default=Path("Data"))
+    parser.add_argument("--notebooks", nargs="*", default=NOTEBOOKS)
+    args = parser.parse_args()
+    root = Path(__file__).resolve().parent
+    os.environ["TAXI_DATA_DIR"] = str(args.data_dir.resolve())
+    os.chdir(root)
+    for name in args.notebooks:
+        start = time.perf_counter()
+        n = run(root / "notebooks" / name)
+        print(f"{name}: {n} celdas en {time.perf_counter() - start:.1f} s")
 
 
 if __name__ == "__main__":

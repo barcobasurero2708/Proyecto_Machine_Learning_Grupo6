@@ -8,7 +8,7 @@ Se utilizan los cuatro archivos originales entregados por el equipo:
 - `yellow_tripdata_2026-04.parquet`
 
 Colócalos en `Data/` en la raíz del proyecto y ejecuta `python main.py --data-dir Data`.
-Otra ubicación admitida es `data/raw/`, predeterminada para los scripts.
+Si `--data-dir` no se indica, `main.py` busca en `Data/` y luego en `data/raw/`.
 Se conservaron los nombres de columnas originales, incluida `Airport_fee`.
 
 Los datos pesan aproximadamente 255.6 MB en formato Parquet. No se incluyen otra vez en el paquete de entrega ni se suben a Git. El proyecto original del equipo ya los contiene.
@@ -37,4 +37,7 @@ Fecha de consulta de la documentación: 23 de septiembre de 2026. Fecha original
 
 ## Reserva temporal
 
-Se leen enero-marzo para desarrollar la entrega. De abril solo se consultan el tamaño, el esquema, el número de filas en metadatos y la huella del archivo. No se calculan distribuciones, faltantes, filtros ni métricas de abril. Si ya se tomaron decisiones mirando sus resultados con el script original, se requiere otro mes posterior para una prueba final intacta.
+- Entrega previa: se leyeron enero-marzo; de abril solo metadatos, esquema y huella.
+- Entrega final: enero se usa para ajustar la búsqueda de hiperparámetros, febrero para validarla, enero-febrero para entrenar y
+  marzo para elegir el modelo. **Abril se lee únicamente en `python main.py --etapa test`**, que toma el modelo ya fijado en
+  `outputs/metrics_validacion.json` y lo evalúa una sola vez. Ninguna decisión de modelado usa resultados de abril.

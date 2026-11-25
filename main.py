@@ -1,169 +1,124 @@
-import pandas as pd
+"""Punto de entrada único del proyecto (Grupo 6, Machine Learning).
+
+Etapas:
+    exploracion  Entrega 1: auditoría de ene-mar, figuras 01-08 y baselines (outputs/*.csv)
+    validacion   Entrega final: búsqueda de hiperparámetros, 3 familias de modelos,
+                 comparación en marzo, interpretación y análisis de errores
+    test         Reentrena el modelo elegido con ene-mar y lo evalúa UNA vez en abril
+    todo         Las tres etapas en orden
+
+Ejemplos:
+    python main.py --data-dir Data --etapa todo
+    python main.py --data-dir Data --etapa validacion --rapido   # prueba corta
+"""
+import argparse
+import json
+from pathlib import Path
+
 import numpy as np
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import pandas as pd
 
-data_enero = 'Data\yellow_tripdata_2026-01.parquet'
-data_febrero = 'Data\yellow_tripdata_2026-02.parquet'
-data_marzo = 'Data\yellow_tripdata_2026-03.parquet'
-data_abril = 'Data\yellow_tripdata_2026-04.parquet'
-
-#Lectura de datos:
-
-df_enero = pd.read_parquet(data_enero, engine='pyarrow')
-df_febrero = pd.read_parquet(data_febrero, engine='pyarrow')
-df_marzo = pd.read_parquet(data_marzo, engine='pyarrow')
-df_abril = pd.read_parquet(data_abril, engine='pyarrow')
+ROOT = Path(__file__).resolve().parent
 
 
-#Exploracion de datasets:
-# Se verifica si contienen exactamente las mismas variables
-print(df_enero.columns.equals(df_febrero.columns))
-print(df_enero.columns.equals(df_marzo.columns))
-print(df_enero.columns.equals(df_abril.columns))
+def find_data_dir(value):
+    if value:
+        return Path(value)
+    for candidate in (ROOT / "Data", ROOT / "data" / "raw", ROOT / "data"):
+        if (candidate / "yellow_tripdata_2026-01.parquet").exists():
+            return candidate
+    raise SystemExit("No se encontraron los Parquet. Ver Data/README.md")
 
 
-# Funcion para obtener información básica de cada dataset (tipo, cant. valores faltantes y su porcentaje)
-def explorar_dataset(df, nombre):
-    print(f"\n===== {nombre} =====")
-
-    print(f"Filas: {df.shape[0]}")
-    print(f"Columnas: {df.shape[1]}")
-
-    resumen = pd.DataFrame({
-        "Tipo de dato": df.dtypes,
-        "Valores faltantes": df.isnull().sum(),
-        "Faltantes (%)": df.isnull().mean() * 100
-    })
-
-    print("\nResumen de variables:")
-    print(resumen)
-
-def revisar_objetivo(df, nombre):
-    print(f"\n===== {nombre} =====")
-
-    print("Total de viajes:", len(df))
-
-    print("Viajes con tarjeta:",(df["payment_type"] == 1).sum())
-
-    print("Fare <= 0:",(df["fare_amount"] <= 0).sum())
-
-    print("Tip = 0:",(df["tip_amount"] == 0).sum())
-
-explorar_dataset(df_enero, "Enero")
-
-explorar_dataset(df_febrero, "Febrero")
-
-explorar_dataset(df_marzo, "Marzo")
-
-explorar_dataset(df_abril, "Abril")
+def run_exploration(data_dir):
+    from src.data import SAMPLE_FRAC, SEED, explore, save_tables
+    from src.model import run_baselines
+    from src.plots import create_figures
+    result = explore(data_dir, sample_frac=SAMPLE_FRAC, seed=SEED)
+    save_tables(result, ROOT)
+    run_baselines(result, ROOT)
+    create_figures(result, ROOT)
 
 
-
-# Revisión de variables relacionadas con el objetivo:
-# Se analiza la cantidad de viajes pagados con tarjeta, los viajes sin
-# propina registrada y los registros con una tarifa menor o igual a cero.
-# Esta revisión permite determinar qué observaciones son adecuadas para
-# calcular el porcentaje de propina.
-
-revisar_objetivo(df_enero, "Enero")
-revisar_objetivo(df_febrero, "Febrero")
-revisar_objetivo(df_marzo, "Marzo")
-revisar_objetivo(df_abril, "Abril")
-
-# Relación entre método de pago y ausencia de propina registrada:
-# Se analiza la cantidad de registros con tip_amount igual a cero
-# según el método de pago. Esto es relevante debido a que las propinas
-# en efectivo no se registran en tip_amount.
-
-print("===== ENERO =====")
-print(pd.crosstab(
-    df_enero["payment_type"],
-    df_enero["tip_amount"] == 0
-))
-
-print("\n===== FEBRERO =====")
-print(pd.crosstab(
-    df_febrero["payment_type"],
-    df_febrero["tip_amount"] == 0
-))
-
-print("\n===== MARZO =====")
-print(pd.crosstab(
-    df_marzo["payment_type"],
-    df_marzo["tip_amount"] == 0
-))
-
-print("\n===== ABRIL =====")
-print(pd.crosstab(
-    df_abril["payment_type"],
-    df_abril["tip_amount"] == 0
-))
-
-print("Enero:", (df_enero["fare_amount"] == 0).sum())
-print("Febrero:", (df_febrero["fare_amount"] == 0).sum())
-print("Marzo:", (df_marzo["fare_amount"] == 0).sum())
-print("Abril:", (df_abril["fare_amount"] == 0).sum())
-
-print("Enero:", (df_enero["fare_amount"] < 0).sum())
-print("Febrero:", (df_febrero["fare_amount"] < 0).sum())
-print("Marzo:", (df_marzo["fare_amount"] < 0).sum())
-print("Abril:", (df_abril["fare_amount"] < 0).sum())
+def _md_table(df: pd.DataFrame) -> str:
+    lines = ["| " + " | ".join(map(str, df.columns)) + " |", "|" + "---|" * len(df.columns)]
+    for _, row in df.iterrows():
+        lines.append("| " + " | ".join("" if pd.isna(v) else str(v) for v in row.values) + " |")
+    return "\n".join(lines)
 
 
-# Juntar los 4 datasets en 1 solo
-df_completo = pd.concat(
-    [df_enero, df_febrero, df_marzo, df_abril],
-    ignore_index=True
-)
+def write_summary():
+    """outputs/metrics.json (resumen final) y reports/resultados.md (tablas generadas)."""
+    out = ROOT / "outputs"
+    combined, md = {}, ["# Resultados generados por `main.py`", "",
+                        "_Archivo generado automáticamente. No editar a mano: el informe final cita estas tablas._", ""]
+    e1 = out / "metrics_entrega1.json"
+    if e1.exists():
+        combined["entrega1_baselines_validacion_marzo"] = json.loads(e1.read_text(encoding="utf-8"))["metricas"]
+    search = out / "busqueda_hiperparametros.csv"
+    if search.exists():
+        combined["busqueda_hiperparametros"] = pd.read_csv(search).to_dict(orient="records")
+    vp, tp = out / "metrics_validacion.json", out / "metrics_test.json"
+    if vp.exists():
+        v = json.loads(vp.read_text(encoding="utf-8"))
+        combined["validacion"] = v
+        t = pd.DataFrame(v["resultados"]).T.drop(columns=["params"], errors="ignore").reset_index(names="modelo")
+        md += [f"## Validación: entrenamiento {', '.join(v['split']['entrenamiento'])} → marzo",
+               f"Viajes de validación: {v['n_validacion']:,}. Métricas en puntos porcentuales (pp).", "",
+               _md_table(t), "", f"**Modelo elegido por MAE:** `{v['mejor_modelo']}` "
+               f"{json.dumps(v['parametros_elegidos'][v['mejor_modelo']])}. Mejora de MAE frente al baseline "
+               f"lineal: **{v['mejora_mae_vs_baseline_lineal_pct']}%**; frente a la mediana: "
+               f"**{v['mejora_mae_vs_baseline_mediana_pct']}%**.", ""]
+        md += ["## Búsqueda de hiperparámetros (ajuste en enero, validación en febrero)", "",
+               _md_table(pd.read_csv(search)), ""]
+    for name, title in [("limpieza_reporte.csv", "Registros sospechosos marcados (no se eliminan)"),
+                        ("deriva_mensual.csv", "Objetivo por mes (poblaciones completas)"),
+                        ("importancia_variables.csv", "Importancia por permutación"),
+                        ("errores_por_segmento_validacion.csv", "Errores por segmento (validación)")]:
+        if (out / name).exists():
+            md += [f"## {title}", "", _md_table(pd.read_csv(out / name)), ""]
+    if tp.exists():
+        t = json.loads(tp.read_text(encoding="utf-8"))
+        combined["test"] = t
+        tt = pd.DataFrame(t["resultados"]).T.reset_index(names="modelo")
+        md += [f"## Test único: entrenamiento ene-mar → abril ({t['n_test']:,} viajes)", "", _md_table(tt), "",
+               f"Mejora de MAE del modelo final frente al baseline lineal en test: "
+               f"**{t['mejora_mae_vs_baseline_lineal_pct']}%**; frente a la mediana: "
+               f"**{t['mejora_mae_vs_baseline_mediana_pct']}%**.", ""]
+        if (out / "errores_por_segmento_test.csv").exists():
+            md += ["## Errores por segmento (test)", "",
+                   _md_table(pd.read_csv(out / "errores_por_segmento_test.csv")), ""]
+    (out / "metrics.json").write_text(json.dumps(combined, indent=2, ensure_ascii=False), encoding="utf-8")
+    (ROOT / "reports" / "resultados.md").write_text("\n".join(md), encoding="utf-8")
 
-# Nueva variable que nos da el mes del viaje a partir de la fecha de recogida
-# para identificar el mes correspondiente de cada viaje
-df_completo["month"] = df_completo["tpep_pickup_datetime"].dt.month
-print(df_completo.shape)
 
-# Copia del dataset con los viajes que nos interesan
-# Se han seleccionado los viajes pagados con tarjeta y con tarifa psotiva
-# para crear el target "tip_percentage" 
+def main():
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--data-dir", default=None, help="carpeta con los cuatro Parquet (por defecto Data/)")
+    parser.add_argument("--etapa", choices=["exploracion", "validacion", "test", "todo"], default="todo")
+    parser.add_argument("--n-por-mes", type=int, default=400_000, help="viajes por mes para entrenar modelos")
+    parser.add_argument("--n-busqueda", type=int, default=250_000, help="viajes por mes en la búsqueda")
+    parser.add_argument("--rf-filas", type=int, default=150_000, help="filas por árbol del Random Forest")
+    parser.add_argument("--n-importancia", type=int, default=30_000)
+    parser.add_argument("--rapido", action="store_true", help="muestras pequeñas para comprobar que corre")
+    args = parser.parse_args()
+    args.data_dir = find_data_dir(args.data_dir)
+    if args.rapido:
+        args.n_por_mes, args.n_busqueda, args.rf_filas, args.n_importancia = 40_000, 20_000, 15_000, 3_000
+    np.random.seed(42)
+    for folder in (ROOT / "outputs", ROOT / "reports" / "figures"):
+        folder.mkdir(parents=True, exist_ok=True)
 
-df_modelo = df_completo[
-    (df_completo["payment_type"] == 1) &
-    (df_completo["fare_amount"] > 0)
-].copy()
+    if args.etapa in ("exploracion", "todo"):
+        run_exploration(args.data_dir)
+    if args.etapa in ("validacion", "test", "todo"):
+        from src.train import stage_test, stage_validation
+        if args.etapa in ("validacion", "todo"):
+            stage_validation(args)
+        if args.etapa in ("test", "todo"):
+            stage_test(args)
+    write_summary()
 
 
-df_modelo["trip_duration"] = (
-    df_modelo["tpep_dropoff_datetime"] -
-    df_modelo["tpep_pickup_datetime"]
-).dt.total_seconds() / 60
-
-df_modelo["tip_percentage"] = (
-    df_modelo["tip_amount"] /
-    df_modelo["fare_amount"]
-) * 100
-
-# Datos estadisitcos del dataset
-print(df_modelo["tip_percentage"].describe())
-
-# Definicion de datos de entrenamiento (75%) aprox y de prueba (25%) aprox
-
-df_train = df_modelo[df_modelo["month"] <= 3].copy()
-df_test = df_modelo[df_modelo["month"] == 4].copy()
-
-# Baseline: promedio del porcentaje de propina del conjunto de entrenamiento
-# Se utiliza el promedio del porcentaje de propina del conjunto de
-# entrenamiento como predicción para todos los viajes del conjunto de prueba.
-baseline = df_train["tip_percentage"].mean()
-
-print("Predicción del baseline:", baseline)
-
-y_test = df_test["tip_percentage"]
-
-y_pred_baseline = [baseline] * len(df_test)
-
-mae = mean_absolute_error(y_test, y_pred_baseline)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred_baseline))
-r2 = r2_score(y_test, y_pred_baseline)
-
-print("MAE:", mae)
-print("RMSE:", rmse)
-print("R²:", r2)
+if __name__ == "__main__":
+    main()

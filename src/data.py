@@ -158,3 +158,69 @@ def save_tables(result, root):
     output.mkdir(parents=True, exist_ok=True)
     for key in ["inventario", "tipos", "faltantes", "pagos", "alertas", "filtros", "objetivo", "resumen_mensual", "extremos"]:
         result[key].to_csv(output / f"{key}.csv", index=False)
+
+
+# ---------------------------------------------------------------------------
+# Entrega final: carga de la población para modelar (un mes a la vez)
+# ---------------------------------------------------------------------------
+# Mismas reglas de población que `explore` (pasos 02-09 de outputs/filtros.csv).
+# Abril solo se lee en la etapa de test, una vez elegido el modelo con marzo.
+LABEL_CUTOFF = {"2026-01": "2026-03-01", "2026-02": "2026-03-01",
+                "2026-03": "2026-04-01", "2026-04": "2026-05-01"}
+
+# Columnas que se conservan: identificación temporal, predictores permitidos
+# y las dos columnas que construyen la etiqueta. `total_amount` no se carga.
+MODEL_COLUMNS = ["VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime", "passenger_count",
+                 "trip_distance", "RatecodeID", "PULocationID", "DOLocationID", "payment_type",
+                 "fare_amount", "extra", "mta_tax", "tip_amount", "tolls_amount",
+                 "improvement_surcharge", "congestion_surcharge", "Airport_fee", "cbd_congestion_fee"]
+
+
+def load_population(data_dir, month):
+    """Devuelve la población elegible completa de un mes y su flujo de filtros.
+
+    Reglas idénticas a la entrega 1: fecha dentro del mes, pago con tarjeta,
+    tarifa positiva finita, propina no negativa finita, duración positiva,
+    etiqueta disponible antes del corte, sin duplicados exactos y objetivo finito.
+    Los duplicados se buscan sobre las 20 columnas originales, como en `explore`.
+    """
+    df = pd.read_parquet(Path(data_dir) / f"yellow_tripdata_{month}.parquet")
+    n = len(df)
+    pickup, dropoff = df.tpep_pickup_datetime, df.tpep_dropoff_datetime
+    duration = (dropoff - pickup).dt.total_seconds() / 60
+    start = pd.Timestamp(month)
+    in_month = pickup.ge(start) & pickup.lt(start + pd.offsets.MonthBegin(1))
+    rules = [
+        ("02_fecha_del_mes", in_month),
+        ("03_pago_tarjeta", df.payment_type.eq(1)),
+        ("04_tarifa_positiva_finita", np.isfinite(df.fare_amount) & df.fare_amount.gt(0)),
+        ("05_propina_no_negativa_finita", np.isfinite(df.tip_amount) & df.tip_amount.ge(0)),
+        ("06_duracion_positiva_finita", np.isfinite(duration) & duration.gt(0)),
+        ("07_etiqueta_antes_del_corte", dropoff.lt(pd.Timestamp(LABEL_CUTOFF[month]))),
+    ]
+    keep = pd.Series(True, index=df.index)
+    flows = [{"mes": month, "paso": "01_originales", "restantes": n, "excluidos_en_paso": 0}]
+    for label, rule in rules:
+        previous = int(keep.sum())
+        keep &= rule
+        flows.append({"mes": month, "paso": label, "restantes": int(keep.sum()),
+                      "excluidos_en_paso": previous - int(keep.sum())})
+    clean = df.loc[keep]
+    del df, pickup, dropoff, duration, in_month, rules
+    duplicate = clean.duplicated(keep="first")
+    clean = clean.loc[~duplicate, MODEL_COLUMNS].copy()
+    flows.append({"mes": month, "paso": "08_sin_duplicados_exactos", "restantes": len(clean),
+                  "excluidos_en_paso": int(duplicate.sum())})
+    clean["duration_min"] = (clean.tpep_dropoff_datetime - clean.tpep_pickup_datetime).dt.total_seconds() / 60
+    clean["tip_percentage"] = 100 * clean.tip_amount / clean.fare_amount
+    finite = np.isfinite(clean.tip_percentage)
+    clean = clean.loc[finite].copy()
+    flows.append({"mes": month, "paso": "09_objetivo_finito", "restantes": len(clean),
+                  "excluidos_en_paso": int((~finite).sum())})
+    clean["mes"] = month
+    clean["pickup_hour"] = clean.tpep_pickup_datetime.dt.hour
+    clean["pickup_weekday"] = clean.tpep_pickup_datetime.dt.dayofweek
+    # tip_amount ya no se necesita: la etiqueta está en tip_percentage.
+    clean = clean.drop(columns=["tip_amount", "payment_type", "tpep_dropoff_datetime"])
+    gc.collect()
+    return clean, pd.DataFrame(flows)

@@ -1,19 +1,5 @@
 {
-  "seed": 42,
-  "sample_frac_lineal": 0.05,
-  "entrenamiento": [
-    "2026-01",
-    "2026-02"
-  ],
-  "validacion": "2026-03",
-  "test_reservado": "2026-04",
-  "abril_evaluado": false,
-  "unidad_error": "puntos porcentuales de la tarifa base",
-  "constantes": {
-    "Media": 25.356692984103717,
-    "Mediana": 26.375838926174495
-  },
-  "metricas": [
+  "entrega1_baselines_validacion_marzo": [
     {
       "modelo": "Media",
       "n_entrenamiento": 4225076,
@@ -34,48 +20,465 @@
       "modelo": "Lineal_log1p",
       "n_entrenamiento": 211254,
       "n_evaluacion": 2565402,
-      "MAE_pp": 7.5236730636052584,
-      "RMSE_pp": 107.28345908155694,
-      "R2": 0.006046810738952191
+      "MAE_pp": 7.52367140558204,
+      "RMSE_pp": 107.28345838860615,
+      "R2": 0.006046823578968019
     }
   ],
-  "sensibilidad_no_principal": [
+  "busqueda_hiperparametros": [
     {
-      "modelo": "Media",
-      "segmento": "tarifa_mayor_igual_1_USD",
-      "n_evaluacion": 2565390,
-      "MAE_pp": 9.639859660246817,
-      "RMSE_pp": 25.32684980319218,
-      "R2": -0.00020454312537987462
+      "modelo": "ridge",
+      "familia": "lineal regularizado (pérdida cuadrática)",
+      "params": "{\"alpha\": 0.1}",
+      "MAE_pp": 7.5486,
+      "seg": 2.4
     },
     {
-      "modelo": "Mediana",
-      "segmento": "tarifa_mayor_igual_1_USD",
-      "n_evaluacion": 2565390,
-      "MAE_pp": 9.576707256724905,
-      "RMSE_pp": 25.361904818474617,
-      "R2": -0.0029752351528329335
+      "modelo": "ridge",
+      "familia": "lineal regularizado (pérdida cuadrática)",
+      "params": "{\"alpha\": 1.0}",
+      "MAE_pp": 7.5487,
+      "seg": 2.4
     },
     {
-      "modelo": "Lineal_log1p",
-      "segmento": "tarifa_mayor_igual_1_USD",
-      "n_evaluacion": 2565390,
-      "MAE_pp": 7.415622593185335,
-      "RMSE_pp": 24.012249184109788,
-      "R2": 0.10093279519445642
+      "modelo": "ridge",
+      "familia": "lineal regularizado (pérdida cuadrática)",
+      "params": "{\"alpha\": 10.0}",
+      "MAE_pp": 7.5492,
+      "seg": 1.9
+    },
+    {
+      "modelo": "ridge",
+      "familia": "lineal regularizado (pérdida cuadrática)",
+      "params": "{\"alpha\": 100.0}",
+      "MAE_pp": 7.5501,
+      "seg": 2.0
+    },
+    {
+      "modelo": "ridge",
+      "familia": "lineal regularizado (pérdida cuadrática)",
+      "params": "{\"alpha\": 1000.0}",
+      "MAE_pp": 7.5486,
+      "seg": 2.2
+    },
+    {
+      "modelo": "lineal_absoluto",
+      "familia": "lineal regularizado (pérdida absoluta)",
+      "params": "{\"alpha\": 1e-06}",
+      "MAE_pp": 6.6432,
+      "seg": 5.5
+    },
+    {
+      "modelo": "lineal_absoluto",
+      "familia": "lineal regularizado (pérdida absoluta)",
+      "params": "{\"alpha\": 1e-05}",
+      "MAE_pp": 6.6438,
+      "seg": 6.0
+    },
+    {
+      "modelo": "lineal_absoluto",
+      "familia": "lineal regularizado (pérdida absoluta)",
+      "params": "{\"alpha\": 0.0001}",
+      "MAE_pp": 6.6427,
+      "seg": 5.5
+    },
+    {
+      "modelo": "lineal_absoluto",
+      "familia": "lineal regularizado (pérdida absoluta)",
+      "params": "{\"alpha\": 0.001}",
+      "MAE_pp": 6.6669,
+      "seg": 5.8
+    },
+    {
+      "modelo": "random_forest",
+      "familia": "bagging de árboles",
+      "params": "{\"min_samples_leaf\": 20, \"max_features\": 0.3, \"max_depth\": 12}",
+      "MAE_pp": 7.4667,
+      "seg": 17.8
+    },
+    {
+      "modelo": "random_forest",
+      "familia": "bagging de árboles",
+      "params": "{\"min_samples_leaf\": 50, \"max_features\": 0.3, \"max_depth\": 12}",
+      "MAE_pp": 7.467,
+      "seg": 17.1
+    },
+    {
+      "modelo": "random_forest",
+      "familia": "bagging de árboles",
+      "params": "{\"min_samples_leaf\": 200, \"max_features\": 0.3, \"max_depth\": 18}",
+      "MAE_pp": 7.4724,
+      "seg": 16.4
+    },
+    {
+      "modelo": "random_forest",
+      "familia": "bagging de árboles",
+      "params": "{\"min_samples_leaf\": 200, \"max_features\": 0.5, \"max_depth\": 12}",
+      "MAE_pp": 7.4675,
+      "seg": 22.9
+    },
+    {
+      "modelo": "hgb_absoluto",
+      "familia": "gradient boosting (pérdida absoluta)",
+      "params": "{\"min_samples_leaf\": 50, \"max_leaf_nodes\": 63, \"learning_rate\": 0.05, \"l2_regularization\": 1.0}",
+      "MAE_pp": 6.4191,
+      "seg": 49.4
+    },
+    {
+      "modelo": "hgb_absoluto",
+      "familia": "gradient boosting (pérdida absoluta)",
+      "params": "{\"min_samples_leaf\": 50, \"max_leaf_nodes\": 31, \"learning_rate\": 0.05, \"l2_regularization\": 0.0}",
+      "MAE_pp": 6.4476,
+      "seg": 43.4
+    },
+    {
+      "modelo": "hgb_absoluto",
+      "familia": "gradient boosting (pérdida absoluta)",
+      "params": "{\"min_samples_leaf\": 200, \"max_leaf_nodes\": 63, \"learning_rate\": 0.2, \"l2_regularization\": 0.0}",
+      "MAE_pp": 6.4309,
+      "seg": 32.2
+    },
+    {
+      "modelo": "hgb_absoluto",
+      "familia": "gradient boosting (pérdida absoluta)",
+      "params": "{\"min_samples_leaf\": 200, \"max_leaf_nodes\": 63, \"learning_rate\": 0.05, \"l2_regularization\": 1.0}",
+      "MAE_pp": 6.4259,
+      "seg": 45.9
+    },
+    {
+      "modelo": "hgb_absoluto",
+      "familia": "gradient boosting (pérdida absoluta)",
+      "params": "{\"min_samples_leaf\": 50, \"max_leaf_nodes\": 31, \"learning_rate\": 0.2, \"l2_regularization\": 0.0}",
+      "MAE_pp": 6.4145,
+      "seg": 37.5
+    },
+    {
+      "modelo": "hgb_absoluto",
+      "familia": "gradient boosting (pérdida absoluta)",
+      "params": "{\"min_samples_leaf\": 200, \"max_leaf_nodes\": 31, \"learning_rate\": 0.05, \"l2_regularization\": 1.0}",
+      "MAE_pp": 6.4397,
+      "seg": 44.2
+    },
+    {
+      "modelo": "hgb_cuadratico",
+      "familia": "gradient boosting (pérdida cuadrática)",
+      "params": "{\"min_samples_leaf\": 50, \"max_leaf_nodes\": 63, \"learning_rate\": 0.05, \"l2_regularization\": 1.0}",
+      "MAE_pp": 7.4786,
+      "seg": 11.7
+    },
+    {
+      "modelo": "hgb_cuadratico",
+      "familia": "gradient boosting (pérdida cuadrática)",
+      "params": "{\"min_samples_leaf\": 50, \"max_leaf_nodes\": 31, \"learning_rate\": 0.05, \"l2_regularization\": 0.0}",
+      "MAE_pp": 7.4721,
+      "seg": 14.2
+    },
+    {
+      "modelo": "hgb_cuadratico",
+      "familia": "gradient boosting (pérdida cuadrática)",
+      "params": "{\"min_samples_leaf\": 200, \"max_leaf_nodes\": 63, \"learning_rate\": 0.2, \"l2_regularization\": 0.0}",
+      "MAE_pp": 7.4783,
+      "seg": 4.8
+    },
+    {
+      "modelo": "hgb_cuadratico",
+      "familia": "gradient boosting (pérdida cuadrática)",
+      "params": "{\"min_samples_leaf\": 200, \"max_leaf_nodes\": 63, \"learning_rate\": 0.05, \"l2_regularization\": 1.0}",
+      "MAE_pp": 7.4802,
+      "seg": 10.5
     }
   ],
-  "lineal_fraccion_predicciones_negativas_antes_recorte": 0.028144906724170325,
-  "features": [
-    "fare_amount",
-    "trip_distance",
-    "duration_min",
-    "passenger_count",
-    "VendorID",
-    "RatecodeID",
-    "PULocationID",
-    "DOLocationID",
-    "pickup_hour",
-    "pickup_weekday"
-  ]
+  "validacion": {
+    "etapa": "validacion",
+    "split": {
+      "busqueda_ajuste": "2026-01",
+      "busqueda_validacion": "2026-02",
+      "entrenamiento": [
+        "2026-01",
+        "2026-02"
+      ],
+      "validacion": "2026-03",
+      "test_reservado": "2026-04",
+      "abril_leido": false
+    },
+    "n_entrenamiento_modelos": 800000,
+    "n_etiquetas_ene_feb": 4225076,
+    "n_validacion": 2565402,
+    "muestreo": {
+      "n_por_mes": 400000,
+      "n_busqueda_por_mes": 250000,
+      "rf_filas_por_arbol": 150000
+    },
+    "unidad": "puntos porcentuales (pp) de la tarifa base",
+    "recorte_objetivo_entrenamiento": "cuantil 0.999 del entrenamiento (solo al ajustar)",
+    "resultados": {
+      "baseline_media": {
+        "n": 2565402,
+        "MAE_pp": 9.7479,
+        "RMSE_pp": 107.6096,
+        "R2": -6e-06,
+        "MedAE_pp": 6.6268,
+        "P90_AE_pp": 25.3567,
+        "RMSE_pp_tarifa_ge_1": 25.3268,
+        "n_entrenamiento": 4225076
+      },
+      "baseline_mediana": {
+        "n": 2565402,
+        "MAE_pp": 9.6848,
+        "RMSE_pp": 107.6168,
+        "R2": -0.00014,
+        "MedAE_pp": 5.9898,
+        "P90_AE_pp": 26.3758,
+        "RMSE_pp_tarifa_ge_1": 25.3619,
+        "n_entrenamiento": 4225076
+      },
+      "baseline_lineal": {
+        "n": 2565402,
+        "MAE_pp": 7.5237,
+        "RMSE_pp": 107.2835,
+        "R2": 0.006047,
+        "MedAE_pp": 4.3274,
+        "P90_AE_pp": 17.3505,
+        "RMSE_pp_tarifa_ge_1": 24.0122,
+        "n_entrenamiento": 211254
+      },
+      "ridge": {
+        "n": 2565402,
+        "MAE_pp": 7.4818,
+        "RMSE_pp": 107.1408,
+        "R2": 0.008688,
+        "MedAE_pp": 3.9915,
+        "P90_AE_pp": 17.0808,
+        "RMSE_pp_tarifa_ge_1": 23.9262,
+        "n_entrenamiento": 800000,
+        "fit_seg": 6.3,
+        "params": {
+          "alpha": 0.1
+        }
+      },
+      "lineal_absoluto": {
+        "n": 2565402,
+        "MAE_pp": 6.532,
+        "RMSE_pp": 105.7836,
+        "R2": 0.033644,
+        "MedAE_pp": 0.9771,
+        "P90_AE_pp": 18.9481,
+        "RMSE_pp_tarifa_ge_1": 24.0777,
+        "n_entrenamiento": 800000,
+        "fit_seg": 17.5,
+        "params": {
+          "alpha": 0.0001
+        }
+      },
+      "random_forest": {
+        "n": 2565402,
+        "MAE_pp": 7.4227,
+        "RMSE_pp": 107.1764,
+        "R2": 0.00803,
+        "MedAE_pp": 3.9196,
+        "P90_AE_pp": 16.9289,
+        "RMSE_pp_tarifa_ge_1": 23.6321,
+        "n_entrenamiento": 800000,
+        "fit_seg": 26.4,
+        "params": {
+          "min_samples_leaf": 20,
+          "max_features": 0.3,
+          "max_depth": 12
+        }
+      },
+      "hgb_absoluto": {
+        "n": 2565402,
+        "MAE_pp": 6.3139,
+        "RMSE_pp": 107.2321,
+        "R2": 0.006999,
+        "MedAE_pp": 0.1031,
+        "P90_AE_pp": 19.1853,
+        "RMSE_pp_tarifa_ge_1": 23.9557,
+        "n_entrenamiento": 800000,
+        "fit_seg": 94.8,
+        "params": {
+          "min_samples_leaf": 50,
+          "max_leaf_nodes": 31,
+          "learning_rate": 0.2,
+          "l2_regularization": 0.0
+        }
+      },
+      "hgb_cuadratico": {
+        "n": 2565402,
+        "MAE_pp": 7.4126,
+        "RMSE_pp": 107.1535,
+        "R2": 0.008453,
+        "MedAE_pp": 3.9245,
+        "P90_AE_pp": 16.9051,
+        "RMSE_pp_tarifa_ge_1": 23.5159,
+        "n_entrenamiento": 800000,
+        "fit_seg": 42.8,
+        "params": {
+          "min_samples_leaf": 50,
+          "max_leaf_nodes": 31,
+          "learning_rate": 0.05,
+          "l2_regularization": 0.0
+        }
+      }
+    },
+    "mejor_modelo": "hgb_absoluto",
+    "parametros_elegidos": {
+      "hgb_absoluto": {
+        "min_samples_leaf": 50,
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.2,
+        "l2_regularization": 0.0
+      },
+      "hgb_cuadratico": {
+        "min_samples_leaf": 50,
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.05,
+        "l2_regularization": 0.0
+      },
+      "lineal_absoluto": {
+        "alpha": 0.0001
+      },
+      "random_forest": {
+        "min_samples_leaf": 20,
+        "max_features": 0.3,
+        "max_depth": 12
+      },
+      "ridge": {
+        "alpha": 0.1
+      }
+    },
+    "ablacion_sin_variables_de_cobro": {
+      "n": 2565402,
+      "MAE_pp": 6.4738,
+      "RMSE_pp": 107.2552,
+      "R2": 0.00657,
+      "MedAE_pp": 0.8331,
+      "P90_AE_pp": 18.7798,
+      "RMSE_pp_tarifa_ge_1": 23.899,
+      "modelo_base": "hgb_absoluto",
+      "variables_quitadas": [
+        "extra",
+        "mta_tax",
+        "tolls_amount",
+        "improvement_surcharge",
+        "congestion_surcharge",
+        "Airport_fee",
+        "cbd_congestion_fee",
+        "subtotal_pre_tip",
+        "ratio_subtotal_fare"
+      ]
+    },
+    "mejora_mae_vs_baseline_lineal_pct": 16.08,
+    "mejora_mae_vs_baseline_mediana_pct": 34.81,
+    "features": [
+      "fare_amount",
+      "log_fare",
+      "trip_distance",
+      "duration_min",
+      "speed_mph",
+      "passenger_count",
+      "extra",
+      "mta_tax",
+      "tolls_amount",
+      "improvement_surcharge",
+      "congestion_surcharge",
+      "Airport_fee",
+      "cbd_congestion_fee",
+      "subtotal_pre_tip",
+      "ratio_subtotal_fare",
+      "hour_sin",
+      "hour_cos",
+      "is_weekend",
+      "is_holiday",
+      "pu_airport",
+      "do_airport",
+      "same_zone",
+      "unknown_zone",
+      "ratecode_missing",
+      "registro_sospechoso",
+      "pickup_hour",
+      "pickup_weekday",
+      "RatecodeID_cat",
+      "VendorID_cat",
+      "PULocationID",
+      "DOLocationID",
+      "route"
+    ],
+    "seed": 42,
+    "duracion_seg": 982
+  },
+  "test": {
+    "etapa": "test",
+    "split": {
+      "entrenamiento": [
+        "2026-01",
+        "2026-02",
+        "2026-03"
+      ],
+      "test": "2026-04"
+    },
+    "n_entrenamiento_modelo": 1200000,
+    "n_etiquetas_ene_mar": 6790478,
+    "n_test": 2591610,
+    "modelo_final": "hgb_absoluto",
+    "parametros": {
+      "min_samples_leaf": 50,
+      "max_leaf_nodes": 31,
+      "learning_rate": 0.2,
+      "l2_regularization": 0.0
+    },
+    "resultados": {
+      "baseline_media": {
+        "n": 2591610,
+        "MAE_pp": 10.1089,
+        "RMSE_pp": 654.9891,
+        "R2": -0.0,
+        "MedAE_pp": 6.3777,
+        "P90_AE_pp": 25.2607,
+        "RMSE_pp_tarifa_ge_1": 24.9242
+      },
+      "baseline_mediana": {
+        "n": 2591610,
+        "MAE_pp": 10.0539,
+        "RMSE_pp": 654.99,
+        "R2": -3e-06,
+        "MedAE_pp": 5.9188,
+        "P90_AE_pp": 26.3889,
+        "RMSE_pp_tarifa_ge_1": 24.9729
+      },
+      "baseline_lineal": {
+        "n": 2591610,
+        "MAE_pp": 7.9684,
+        "RMSE_pp": 654.9165,
+        "R2": 0.000222,
+        "MedAE_pp": 4.3949,
+        "P90_AE_pp": 17.3223,
+        "RMSE_pp_tarifa_ge_1": 23.6253
+      },
+      "hgb_absoluto": {
+        "n": 2591610,
+        "MAE_pp": 6.7061,
+        "RMSE_pp": 654.9238,
+        "R2": 0.0002,
+        "MedAE_pp": 0.1516,
+        "P90_AE_pp": 19.0328,
+        "RMSE_pp_tarifa_ge_1": 23.6846
+      }
+    },
+    "mejora_mae_vs_baseline_lineal_pct": 15.84,
+    "mejora_mae_vs_baseline_mediana_pct": 33.3,
+    "resumen_objetivo_test": {
+      "mes": "2026-04",
+      "n": 2591610,
+      "media": 25.33,
+      "mediana": 26.25,
+      "p10": 0.0,
+      "p90": 37.692,
+      "p99": 55.862,
+      "pct_cero": 10.061,
+      "pct_mayor_100": 0.1662
+    },
+    "seed": 42,
+    "duracion_seg": 285
+  }
 }

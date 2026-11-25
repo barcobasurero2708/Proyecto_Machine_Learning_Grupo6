@@ -1,6 +1,6 @@
 """Descarga oficial opcional. No sobrescribe archivos existentes.
 
-Si ya tienes los cuatro archivos, basta con copiarlos a Data/ o data/raw/.
+Si ya tienes los cuatro archivos, basta con copiarlos a Data/.
 """
 import argparse
 import csv
@@ -11,10 +11,10 @@ from src.data import MONTHS, sha256
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-dir", type=Path, default=Path("data/raw"))
+    parser.add_argument("--data-dir", type=Path, default=Path("Data"))
     args = parser.parse_args()
     args.data_dir.mkdir(parents=True, exist_ok=True)
-    manifest = Path(__file__).resolve().parent / "data" / "manifest.csv"
+    manifest = Path(__file__).resolve().parent / "Data" / "manifest.csv"
     with manifest.open(encoding="utf-8") as stream:
         expected = {r["archivo"]: r["sha256"] for r in csv.DictReader(stream)}
     for month in MONTHS:

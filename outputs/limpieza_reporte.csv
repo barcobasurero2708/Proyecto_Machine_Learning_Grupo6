@@ -1,0 +1,19 @@
+mes,regla,n_marcados,pct
+2026-01,duracion_menor_1_min,17237,0.78
+2026-01,duracion_mayor_180_min,1425,0.064
+2026-01,distancia_cero_o_faltante,17268,0.781
+2026-01,distancia_mayor_100_mi,17,0.001
+2026-01,velocidad_mayor_80_mph,287,0.013
+2026-01,registro_sospechoso (alguna regla),23805,1.077
+2026-02,duracion_menor_1_min,14657,0.727
+2026-02,duracion_mayor_180_min,1172,0.058
+2026-02,distancia_cero_o_faltante,15527,0.771
+2026-02,distancia_mayor_100_mi,25,0.001
+2026-02,velocidad_mayor_80_mph,280,0.014
+2026-02,registro_sospechoso (alguna regla),21037,1.044
+2026-03,duracion_menor_1_min,19174,0.747
+2026-03,duracion_mayor_180_min,753,0.029
+2026-03,distancia_cero_o_faltante,19400,0.756
+2026-03,distancia_mayor_100_mi,22,0.001
+2026-03,velocidad_mayor_80_mph,466,0.018
+2026-03,registro_sospechoso (alguna regla),26241,1.023

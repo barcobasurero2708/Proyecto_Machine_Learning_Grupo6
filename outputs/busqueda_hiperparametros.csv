@@ -1,0 +1,24 @@
+modelo,familia,params,MAE_pp,seg
+ridge,lineal regularizado (pérdida cuadrática),"{""alpha"": 0.1}",7.5486,2.4
+ridge,lineal regularizado (pérdida cuadrática),"{""alpha"": 1.0}",7.5487,2.4
+ridge,lineal regularizado (pérdida cuadrática),"{""alpha"": 10.0}",7.5492,1.9
+ridge,lineal regularizado (pérdida cuadrática),"{""alpha"": 100.0}",7.5501,2.0
+ridge,lineal regularizado (pérdida cuadrática),"{""alpha"": 1000.0}",7.5486,2.2
+lineal_absoluto,lineal regularizado (pérdida absoluta),"{""alpha"": 1e-06}",6.6432,5.5
+lineal_absoluto,lineal regularizado (pérdida absoluta),"{""alpha"": 1e-05}",6.6438,6.0
+lineal_absoluto,lineal regularizado (pérdida absoluta),"{""alpha"": 0.0001}",6.6427,5.5
+lineal_absoluto,lineal regularizado (pérdida absoluta),"{""alpha"": 0.001}",6.6669,5.8
+random_forest,bagging de árboles,"{""min_samples_leaf"": 20, ""max_features"": 0.3, ""max_depth"": 12}",7.4667,17.8
+random_forest,bagging de árboles,"{""min_samples_leaf"": 50, ""max_features"": 0.3, ""max_depth"": 12}",7.467,17.1
+random_forest,bagging de árboles,"{""min_samples_leaf"": 200, ""max_features"": 0.3, ""max_depth"": 18}",7.4724,16.4
+random_forest,bagging de árboles,"{""min_samples_leaf"": 200, ""max_features"": 0.5, ""max_depth"": 12}",7.4675,22.9
+hgb_absoluto,gradient boosting (pérdida absoluta),"{""min_samples_leaf"": 50, ""max_leaf_nodes"": 63, ""learning_rate"": 0.05, ""l2_regularization"": 1.0}",6.4191,49.4
+hgb_absoluto,gradient boosting (pérdida absoluta),"{""min_samples_leaf"": 50, ""max_leaf_nodes"": 31, ""learning_rate"": 0.05, ""l2_regularization"": 0.0}",6.4476,43.4
+hgb_absoluto,gradient boosting (pérdida absoluta),"{""min_samples_leaf"": 200, ""max_leaf_nodes"": 63, ""learning_rate"": 0.2, ""l2_regularization"": 0.0}",6.4309,32.2
+hgb_absoluto,gradient boosting (pérdida absoluta),"{""min_samples_leaf"": 200, ""max_leaf_nodes"": 63, ""learning_rate"": 0.05, ""l2_regularization"": 1.0}",6.4259,45.9
+hgb_absoluto,gradient boosting (pérdida absoluta),"{""min_samples_leaf"": 50, ""max_leaf_nodes"": 31, ""learning_rate"": 0.2, ""l2_regularization"": 0.0}",6.4145,37.5
+hgb_absoluto,gradient boosting (pérdida absoluta),"{""min_samples_leaf"": 200, ""max_leaf_nodes"": 31, ""learning_rate"": 0.05, ""l2_regularization"": 1.0}",6.4397,44.2
+hgb_cuadratico,gradient boosting (pérdida cuadrática),"{""min_samples_leaf"": 50, ""max_leaf_nodes"": 63, ""learning_rate"": 0.05, ""l2_regularization"": 1.0}",7.4786,11.7
+hgb_cuadratico,gradient boosting (pérdida cuadrática),"{""min_samples_leaf"": 50, ""max_leaf_nodes"": 31, ""learning_rate"": 0.05, ""l2_regularization"": 0.0}",7.4721,14.2
+hgb_cuadratico,gradient boosting (pérdida cuadrática),"{""min_samples_leaf"": 200, ""max_leaf_nodes"": 63, ""learning_rate"": 0.2, ""l2_regularization"": 0.0}",7.4783,4.8
+hgb_cuadratico,gradient boosting (pérdida cuadrática),"{""min_samples_leaf"": 200, ""max_leaf_nodes"": 63, ""learning_rate"": 0.05, ""l2_regularization"": 1.0}",7.4802,10.5

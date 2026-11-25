@@ -1,0 +1,74 @@
+{
+  "etapa": "test",
+  "split": {
+    "entrenamiento": [
+      "2026-01",
+      "2026-02",
+      "2026-03"
+    ],
+    "test": "2026-04"
+  },
+  "n_entrenamiento_modelo": 1200000,
+  "n_etiquetas_ene_mar": 6790478,
+  "n_test": 2591610,
+  "modelo_final": "hgb_absoluto",
+  "parametros": {
+    "min_samples_leaf": 50,
+    "max_leaf_nodes": 31,
+    "learning_rate": 0.2,
+    "l2_regularization": 0.0
+  },
+  "resultados": {
+    "baseline_media": {
+      "n": 2591610,
+      "MAE_pp": 10.1089,
+      "RMSE_pp": 654.9891,
+      "R2": -0.0,
+      "MedAE_pp": 6.3777,
+      "P90_AE_pp": 25.2607,
+      "RMSE_pp_tarifa_ge_1": 24.9242
+    },
+    "baseline_mediana": {
+      "n": 2591610,
+      "MAE_pp": 10.0539,
+      "RMSE_pp": 654.99,
+      "R2": -3e-06,
+      "MedAE_pp": 5.9188,
+      "P90_AE_pp": 26.3889,
+      "RMSE_pp_tarifa_ge_1": 24.9729
+    },
+    "baseline_lineal": {
+      "n": 2591610,
+      "MAE_pp": 7.9684,
+      "RMSE_pp": 654.9165,
+      "R2": 0.000222,
+      "MedAE_pp": 4.3949,
+      "P90_AE_pp": 17.3223,
+      "RMSE_pp_tarifa_ge_1": 23.6253
+    },
+    "hgb_absoluto": {
+      "n": 2591610,
+      "MAE_pp": 6.7061,
+      "RMSE_pp": 654.9238,
+      "R2": 0.0002,
+      "MedAE_pp": 0.1516,
+      "P90_AE_pp": 19.0328,
+      "RMSE_pp_tarifa_ge_1": 23.6846
+    }
+  },
+  "mejora_mae_vs_baseline_lineal_pct": 15.84,
+  "mejora_mae_vs_baseline_mediana_pct": 33.3,
+  "resumen_objetivo_test": {
+    "mes": "2026-04",
+    "n": 2591610,
+    "media": 25.33,
+    "mediana": 26.25,
+    "p10": 0.0,
+    "p90": 37.692,
+    "p99": 55.862,
+    "pct_cero": 10.061,
+    "pct_mayor_100": 0.1662
+  },
+  "seed": 42,
+  "duracion_seg": 285
+}

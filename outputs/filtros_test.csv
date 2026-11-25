@@ -1,0 +1,10 @@
+mes,paso,restantes,excluidos_en_paso
+2026-04,01_originales,3831240,0
+2026-04,02_fecha_del_mes,3831228,12
+2026-04,03_pago_tarjeta,2635740,1195488
+2026-04,04_tarifa_positiva_finita,2635409,331
+2026-04,05_propina_no_negativa_finita,2635409,0
+2026-04,06_duracion_positiva_finita,2592460,42949
+2026-04,07_etiqueta_antes_del_corte,2591610,850
+2026-04,08_sin_duplicados_exactos,2591610,0
+2026-04,09_objetivo_finito,2591610,0

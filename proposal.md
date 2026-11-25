@@ -1,5 +1,8 @@
 # Propuesta | Predicción del porcentaje de propina en taxis amarillos de Nueva York
 
+> Documento de la entrega previa, sin cambios de contenido. Las decisiones posteriores (incorporación de recargos, búsqueda de
+> hiperparámetros, modelo final y evaluación en abril) están en [`reports/informe_final.md`](reports/informe_final.md).
+
 
 ## 1. Título del proyecto
 

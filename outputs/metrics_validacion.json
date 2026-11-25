@@ -1,0 +1,219 @@
+{
+  "etapa": "validacion",
+  "split": {
+    "busqueda_ajuste": "2026-01",
+    "busqueda_validacion": "2026-02",
+    "entrenamiento": [
+      "2026-01",
+      "2026-02"
+    ],
+    "validacion": "2026-03",
+    "test_reservado": "2026-04",
+    "abril_leido": false
+  },
+  "n_entrenamiento_modelos": 800000,
+  "n_etiquetas_ene_feb": 4225076,
+  "n_validacion": 2565402,
+  "muestreo": {
+    "n_por_mes": 400000,
+    "n_busqueda_por_mes": 250000,
+    "rf_filas_por_arbol": 150000
+  },
+  "unidad": "puntos porcentuales (pp) de la tarifa base",
+  "recorte_objetivo_entrenamiento": "cuantil 0.999 del entrenamiento (solo al ajustar)",
+  "resultados": {
+    "baseline_media": {
+      "n": 2565402,
+      "MAE_pp": 9.7479,
+      "RMSE_pp": 107.6096,
+      "R2": -6e-06,
+      "MedAE_pp": 6.6268,
+      "P90_AE_pp": 25.3567,
+      "RMSE_pp_tarifa_ge_1": 25.3268,
+      "n_entrenamiento": 4225076
+    },
+    "baseline_mediana": {
+      "n": 2565402,
+      "MAE_pp": 9.6848,
+      "RMSE_pp": 107.6168,
+      "R2": -0.00014,
+      "MedAE_pp": 5.9898,
+      "P90_AE_pp": 26.3758,
+      "RMSE_pp_tarifa_ge_1": 25.3619,
+      "n_entrenamiento": 4225076
+    },
+    "baseline_lineal": {
+      "n": 2565402,
+      "MAE_pp": 7.5237,
+      "RMSE_pp": 107.2835,
+      "R2": 0.006047,
+      "MedAE_pp": 4.3274,
+      "P90_AE_pp": 17.3505,
+      "RMSE_pp_tarifa_ge_1": 24.0122,
+      "n_entrenamiento": 211254
+    },
+    "ridge": {
+      "n": 2565402,
+      "MAE_pp": 7.4818,
+      "RMSE_pp": 107.1408,
+      "R2": 0.008688,
+      "MedAE_pp": 3.9915,
+      "P90_AE_pp": 17.0808,
+      "RMSE_pp_tarifa_ge_1": 23.9262,
+      "n_entrenamiento": 800000,
+      "fit_seg": 6.3,
+      "params": {
+        "alpha": 0.1
+      }
+    },
+    "lineal_absoluto": {
+      "n": 2565402,
+      "MAE_pp": 6.532,
+      "RMSE_pp": 105.7836,
+      "R2": 0.033644,
+      "MedAE_pp": 0.9771,
+      "P90_AE_pp": 18.9481,
+      "RMSE_pp_tarifa_ge_1": 24.0777,
+      "n_entrenamiento": 800000,
+      "fit_seg": 17.5,
+      "params": {
+        "alpha": 0.0001
+      }
+    },
+    "random_forest": {
+      "n": 2565402,
+      "MAE_pp": 7.4227,
+      "RMSE_pp": 107.1764,
+      "R2": 0.00803,
+      "MedAE_pp": 3.9196,
+      "P90_AE_pp": 16.9289,
+      "RMSE_pp_tarifa_ge_1": 23.6321,
+      "n_entrenamiento": 800000,
+      "fit_seg": 26.4,
+      "params": {
+        "min_samples_leaf": 20,
+        "max_features": 0.3,
+        "max_depth": 12
+      }
+    },
+    "hgb_absoluto": {
+      "n": 2565402,
+      "MAE_pp": 6.3139,
+      "RMSE_pp": 107.2321,
+      "R2": 0.006999,
+      "MedAE_pp": 0.1031,
+      "P90_AE_pp": 19.1853,
+      "RMSE_pp_tarifa_ge_1": 23.9557,
+      "n_entrenamiento": 800000,
+      "fit_seg": 94.8,
+      "params": {
+        "min_samples_leaf": 50,
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.2,
+        "l2_regularization": 0.0
+      }
+    },
+    "hgb_cuadratico": {
+      "n": 2565402,
+      "MAE_pp": 7.4126,
+      "RMSE_pp": 107.1535,
+      "R2": 0.008453,
+      "MedAE_pp": 3.9245,
+      "P90_AE_pp": 16.9051,
+      "RMSE_pp_tarifa_ge_1": 23.5159,
+      "n_entrenamiento": 800000,
+      "fit_seg": 42.8,
+      "params": {
+        "min_samples_leaf": 50,
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.05,
+        "l2_regularization": 0.0
+      }
+    }
+  },
+  "mejor_modelo": "hgb_absoluto",
+  "parametros_elegidos": {
+    "hgb_absoluto": {
+      "min_samples_leaf": 50,
+      "max_leaf_nodes": 31,
+      "learning_rate": 0.2,
+      "l2_regularization": 0.0
+    },
+    "hgb_cuadratico": {
+      "min_samples_leaf": 50,
+      "max_leaf_nodes": 31,
+      "learning_rate": 0.05,
+      "l2_regularization": 0.0
+    },
+    "lineal_absoluto": {
+      "alpha": 0.0001
+    },
+    "random_forest": {
+      "min_samples_leaf": 20,
+      "max_features": 0.3,
+      "max_depth": 12
+    },
+    "ridge": {
+      "alpha": 0.1
+    }
+  },
+  "ablacion_sin_variables_de_cobro": {
+    "n": 2565402,
+    "MAE_pp": 6.4738,
+    "RMSE_pp": 107.2552,
+    "R2": 0.00657,
+    "MedAE_pp": 0.8331,
+    "P90_AE_pp": 18.7798,
+    "RMSE_pp_tarifa_ge_1": 23.899,
+    "modelo_base": "hgb_absoluto",
+    "variables_quitadas": [
+      "extra",
+      "mta_tax",
+      "tolls_amount",
+      "improvement_surcharge",
+      "congestion_surcharge",
+      "Airport_fee",
+      "cbd_congestion_fee",
+      "subtotal_pre_tip",
+      "ratio_subtotal_fare"
+    ]
+  },
+  "mejora_mae_vs_baseline_lineal_pct": 16.08,
+  "mejora_mae_vs_baseline_mediana_pct": 34.81,
+  "features": [
+    "fare_amount",
+    "log_fare",
+    "trip_distance",
+    "duration_min",
+    "speed_mph",
+    "passenger_count",
+    "extra",
+    "mta_tax",
+    "tolls_amount",
+    "improvement_surcharge",
+    "congestion_surcharge",
+    "Airport_fee",
+    "cbd_congestion_fee",
+    "subtotal_pre_tip",
+    "ratio_subtotal_fare",
+    "hour_sin",
+    "hour_cos",
+    "is_weekend",
+    "is_holiday",
+    "pu_airport",
+    "do_airport",
+    "same_zone",
+    "unknown_zone",
+    "ratecode_missing",
+    "registro_sospechoso",
+    "pickup_hour",
+    "pickup_weekday",
+    "RatecodeID_cat",
+    "VendorID_cat",
+    "PULocationID",
+    "DOLocationID",
+    "route"
+  ],
+  "seed": 42,
+  "duracion_seg": 982
+}

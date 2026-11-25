@@ -1,4 +1,9 @@
-"""Baselines de media, mediana y regresión lineal sin propina ni total en X."""
+"""Baselines de la entrega 1: media, mediana y regresión lineal sin propina ni total en X.
+
+La entrega final los reutiliza sin cambios (src/train.py) para comparar contra la misma
+referencia. Sus métricas se guardan en outputs/metrics_entrega1.json; outputs/metrics.json
+queda para el resumen final que escribe main.py.
+"""
 from pathlib import Path
 import json
 import numpy as np
@@ -93,5 +98,5 @@ def run_baselines(result, root):
                "sensibilidad_no_principal": sensitivity,
                "lineal_fraccion_predicciones_negativas_antes_recorte": negative,
                "features": FEATURES}
-    (output / "metrics.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    (output / "metrics_entrega1.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     return payload
